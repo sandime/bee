@@ -1,0 +1,13 @@
+<html ng-app="countryApp">
+  <head>
+    <meta charset="utf-8">
+    <title>Angular.js Example</title>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/angular.js/1.2.1/angular.min.js"></script>
+    <script src="main.js"></script>
+  </head>
+  <body ng-controller="CountryListCtrl">
+    <ul>
+      <li ng-repeat="country in countries">{{country.name}}</li>
+    </ul>
+  </body>
+</html>
