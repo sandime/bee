@@ -29,19 +29,15 @@ countryApp.config(function($routeProvider) {
             redirectTo: '/'
         });
 });
+/* using angular's built-in http cache service*/
 countryApp.factory('countries', function($http){
 
-        var cachedData;
-
         function getData(callback){
-          if(cachedData) {
-            callback(cachedData);
-          } else {
-            $http.get('countries.json').success(function(data){
-              cachedData = data;
-              callback(data);
-            });
-          }
+          $http({
+            method: 'GET',
+            url: 'countries.json',
+            cache: true
+          }).success(callback);
         }
 
         return {
@@ -68,3 +64,42 @@ countryApp.factory('countries', function($http){
           $scope.country = country;
         });
       });
+
+
+
+/*
+countryApp.factory('countries', function($http){
+
+        function getData(callback){
+          $http({
+            method: 'GET',
+            url: 'countries.json',
+            cache: true
+          }).success(callback);
+        }
+
+        return {
+          list: getData,
+          find: function(name, callback){
+            getData(function(data) {
+              var country = data.filter(function(entry){
+                return entry.name === name;
+              })[0];
+              callback(country);
+            });
+          }
+        };
+      });
+
+      countryApp.controller('CountryListCtrl', function ($scope, countries){
+        countries.list(function(countries) {
+          $scope.countries = countries;
+        });
+      });
+
+      countryApp.controller('CountryDetailCtrl', function ($scope, $routeParams, countries){
+        countries.find($routeParams.countryName, function(country) {
+          $scope.country = country;
+        });
+      });
+*/
