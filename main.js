@@ -29,62 +29,41 @@ countryApp.config(function($routeProvider) {
             redirectTo: '/'
         });
 });
-/* this section is redundant. calling json twice. replaced with the "countries" factory
-countryApp.controller('CountryListCtrl', function ($scope, $http){
-    $http.get('countries.json').success(function(data) {
-        $scope.countries = data;
-    });
-});
-countryApp.controller('CountryDetailCtrl', function ($scope, $routeParams, $http){
-    $scope.name = $routeParams.countryName;
-    $http.get('countries.json').success(function(data) {
-        $scope.country = data.filter(function(entry){
-            return entry.name === $scope.name;
-        })[0];
-    });
-}); */
-
-/* replace this with section above
-countryApp.controller('CountryDetailCtrl', function ($scope, $routeParams){
-    console.log($routeParams);
-    $scope.name= $routeParams.countryName;
-    */
-
 countryApp.factory('countries', function($http){
+
+        var cachedData;
+
+        function getData(callback){
+          if(cachedData) {
+            callback(cachedData);
+          } else {
+            $http.get('countries.json').success(function(data){
+              cachedData = data;
+              callback(data);
+            });
+          }
+        }
+
         return {
-          list: function(callback){
-            $http.get('countries.json').success(callback);
-          },
-
-/* added a find function for country detail */
-            find: function(name, callback) {
-                $http.get('countries.json').success(function(data) {
-                    var country = data.filter(function(entry) {
-                        return entry.name === name;
-
-                    })[0];
-                    callback(country);
-                });
-            }
+          list: getData,
+          find: function(name, callback){
+            getData(function(data) {
+              var country = data.filter(function(entry){
+                return entry.name === name;
+              })[0];
+              callback(country);
+            });
+          }
         };
       });
-/* now the controllers call the list function and pass their own callback using "countries" factory*/
+
       countryApp.controller('CountryListCtrl', function ($scope, countries){
         countries.list(function(countries) {
           $scope.countries = countries;
         });
       });
-/* this section now replaced
-      countryApp.controller('CountryDetailCtrl', function ($scope, $routeParams, $http){
-        $http.get('countries.json').success(function(data) {
-          $scope.country = data.filter(function(entry){
-            return entry.name === $routeParams.countryName
-          })[0];
-        });
-      });
-*/
 
- countryApp.controller('CountryDetailCtrl', function ($scope, $routeParams, countries){
+      countryApp.controller('CountryDetailCtrl', function ($scope, $routeParams, countries){
         countries.find($routeParams.countryName, function(country) {
           $scope.country = country;
         });
