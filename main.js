@@ -54,7 +54,18 @@ countryApp.factory('countries', function($http){
         return {
           list: function(callback){
             $http.get('countries.json').success(callback);
-          }
+          },
+
+/* added a find function for country detail */
+            find: function(name, callback) {
+                $http.get('countries.json').success(function(data) {
+                    var country = data.filter(function(entry) {
+                        return entry.name === name;
+
+                    })[0];
+                    callback(country);
+                });
+            }
         };
       });
 /* now the controllers call the list function and pass their own callback using "countries" factory*/
@@ -63,10 +74,18 @@ countryApp.factory('countries', function($http){
           $scope.countries = countries;
         });
       });
+/* this section now replaced
       countryApp.controller('CountryDetailCtrl', function ($scope, $routeParams, $http){
         $http.get('countries.json').success(function(data) {
           $scope.country = data.filter(function(entry){
             return entry.name === $routeParams.countryName
           })[0];
+        });
+      });
+*/
+
+ countryApp.controller('CountryDetailCtrl', function ($scope, $routeParams, countries){
+        countries.find($routeParams.countryName, function(country) {
+          $scope.country = country;
         });
       });
