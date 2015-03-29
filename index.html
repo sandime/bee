@@ -3,11 +3,14 @@
     <meta charset="utf-8">
     <title>Angular.js Example</title>
     <script src="//cdnjs.cloudflare.com/ajax/libs/angular.js/1.2.1/angular.min.js"></script>
-    <script src="main.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/angular.js/1.2.10/angular-route.min.js"></script>
+      <script src="main.js"></script>
   </head>
+  <!--this gets replaced with the view
   <body ng-controller="CountryListCtrl">
-    <ul>
-      <li ng-repeat="country in countries">{{country.name}}</li>
-    </ul>
+
+  </body> -->
+<body>
+    <div ng-view></div>
   </body>
 </html>
