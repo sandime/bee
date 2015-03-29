@@ -29,6 +29,7 @@ countryApp.config(function($routeProvider) {
             redirectTo: '/'
         });
 });
+/* this section is redundant. calling json twice. replaced with the "countries" factory
 countryApp.controller('CountryListCtrl', function ($scope, $http){
     $http.get('countries.json').success(function(data) {
         $scope.countries = data;
@@ -41,7 +42,7 @@ countryApp.controller('CountryDetailCtrl', function ($scope, $routeParams, $http
             return entry.name === $scope.name;
         })[0];
     });
-});
+}); */
 
 /* replace this with section above
 countryApp.controller('CountryDetailCtrl', function ($scope, $routeParams){
@@ -49,3 +50,23 @@ countryApp.controller('CountryDetailCtrl', function ($scope, $routeParams){
     $scope.name= $routeParams.countryName;
     */
 
+countryApp.factory('countries', function($http){
+        return {
+          list: function(callback){
+            $http.get('countries.json').success(callback);
+          }
+        };
+      });
+/* now the controllers call the list function and pass their own callback using "countries" factory*/
+      countryApp.controller('CountryListCtrl', function ($scope, countries){
+        countries.list(function(countries) {
+          $scope.countries = countries;
+        });
+      });
+      countryApp.controller('CountryDetailCtrl', function ($scope, $routeParams, $http){
+        $http.get('countries.json').success(function(data) {
+          $scope.country = data.filter(function(entry){
+            return entry.name === $routeParams.countryName
+          })[0];
+        });
+      });
