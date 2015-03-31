@@ -29,8 +29,9 @@ countryApp.config(function($routeProvider) {
             redirectTo: '/'
         });
 });
-/* using angular's built-in http cache service*/
+/* using angular's built-in http cache service #42 as below*/
 countryApp.factory('countries', function($http){
+    var cachedData;
 
         function getData(callback){
           $http({
@@ -52,7 +53,7 @@ countryApp.factory('countries', function($http){
           }
         };
       });
-
+//gets countries factory's info and assign it to $scope.countries
       countryApp.controller('CountryListCtrl', function ($scope, countries){
         countries.list(function(countries) {
           $scope.countries = countries;
