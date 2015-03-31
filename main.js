@@ -21,7 +21,7 @@ countryApp.config(function($routeProvider) {
             templateUrl: 'country-list.html',
             controller: 'CountryListCtrl'
         }).
-        when('/:countryName', {
+        when('/:countryId', {
             templateUrl: 'country-detail.html',
             controller: 'CountryDetailCtrl'
         }).
@@ -29,27 +29,22 @@ countryApp.config(function($routeProvider) {
             redirectTo: '/'
         });
 });
-/* using angular's built-in http cache service #42 as below*/
+/* querying a database based on id #45 as below*/
 countryApp.factory('countries', function($http){
-    var cachedData;
-
-        function getData(callback){
-          $http({
-            method: 'GET',
-            url: 'countries.json',
-            cache: true
-          }).success(callback);
-        }
-
         return {
-          list: getData,
-          find: function(name, callback){
-            getData(function(data) {
-              var country = data.filter(function(entry){
-                return entry.name === name;
-              })[0];
-              callback(country);
-            });
+          list: function (callback){
+            $http({
+              method: 'GET',
+              url: 'countries.json',
+              cache: true
+            }).success(callback);
+          },
+          find: function(id, callback){
+            $http({
+              method: 'GET',
+              url: 'country_' + id + '.json',
+              cache: true
+            }).success(callback);
           }
         };
       });
@@ -61,15 +56,12 @@ countryApp.factory('countries', function($http){
       });
 
       countryApp.controller('CountryDetailCtrl', function ($scope, $routeParams, countries){
-        countries.find($routeParams.countryName, function(country) {
+        countries.find($routeParams.countryId, function(country) {
           $scope.country = country;
         });
       });
 
-// customized filter gets rid of spaces and replaces with %20 to show visited/unvisited links
-countryApp.filter('encodeURI', function (){
-    return window.encodeURI;
-});
+
 
 /*
 countryApp.factory('countries', function($http){
