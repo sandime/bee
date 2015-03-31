@@ -66,7 +66,10 @@ countryApp.factory('countries', function($http){
         });
       });
 
-
+// customized filter gets rid of spaces and replaces with %20 to show visited/unvisited links
+countryApp.filter('encodeURI', function (){
+    return window.encodeURI;
+});
 
 /*
 countryApp.factory('countries', function($http){
