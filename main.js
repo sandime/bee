@@ -48,6 +48,18 @@ countryApp.factory('countries', function($http){
           }
         };
       });
+
+// directive
+
+countryApp.directive('country', function(){
+    return {
+        scope: {
+            country: '=' //bidirectional binding; directives have own scope
+        },
+        restrict: 'A',
+        templateUrl: 'country.html'
+    };
+});
 //gets countries factory's info and assign it to $scope.countries
       countryApp.controller('CountryListCtrl', function ($scope, countries){
         countries.list(function(countries) {

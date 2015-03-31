@@ -1,12 +1,5 @@
-<!-- replaced with
+<!-- directives #46 use country directive-->
 <ul>
-    <li ng-repeat="country in countries">{{country.name}}</li>
-</ul>
-added encodeURI filter #44
-changed to country.id in 45
- -->
-<ul>
-  <li ng-repeat="country in countries">
-    <a href="#/{{country.id}}">{{country.name}}</a>
+  <li ng-repeat="country in countries" country="country">
   </li>
 </ul>
